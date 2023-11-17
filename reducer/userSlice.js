@@ -13,6 +13,7 @@ const userSlice = createSlice({
       state.userData = action.payload.user;
     },
   },
+  extraReducers: (builders) => {},
 });
 
 export const { saveUser } = userSlice.actions;

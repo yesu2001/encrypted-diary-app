@@ -6,11 +6,10 @@ import { redirect } from "next/navigation";
 export default async function Dashboard() {
   const supabase = createClient(cookies());
   const { data: user } = await supabase.auth.getUser();
-  console.log(user);
 
-  if (!user) {
-    redirect("/auth");
-  }
-
-  return <Workspace user={user?.user} />;
+  return (
+    <div className="h-full flex flex-col items-center justify-center gap-10">
+      <Workspace user={user?.user} />
+    </div>
+  );
 }
