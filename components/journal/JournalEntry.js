@@ -12,7 +12,7 @@ import TitleComponent from "./TitleComponent";
 import ContentComponent from "./ContentComponent";
 import DOMPurify from "dompurify";
 
-const JournalEntry = ({ journal }) => {
+const JournalEntry = ({ journal, setSelectedJournal }) => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const inputRef = useRef(null);
@@ -78,6 +78,7 @@ const JournalEntry = ({ journal }) => {
 
   const handleDeleteJournal = () => {
     dispatch(deleteJournal({ id: journal.id }));
+    setSelectedJournal(null);
     setOpen(false);
   };
 
@@ -107,7 +108,9 @@ const JournalEntry = ({ journal }) => {
           />
         </div>
       ) : (
-        <p>Select a journal to view its content.</p>
+        <p className="text-center text-2xl text-gray-400">
+          Select a journal to view its content.
+        </p>
       )}
       {open && (
         <div className="fixed inset-0 flex items-center justify-center z-10">

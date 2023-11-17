@@ -8,5 +8,9 @@ export default async function Dashboard() {
   const { data: user } = await supabase.auth.getUser();
   console.log(user);
 
+  if (!user) {
+    redirect("/auth");
+  }
+
   return <Workspace user={user?.user} />;
 }

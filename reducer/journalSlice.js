@@ -7,32 +7,31 @@ import {
 } from "@/utils/journalsApi";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-export const fetchJournals = createAsyncThunk(
-  "fetchJournal",
+export const fetchActiveJournals = createAsyncThunk(
+  "journals/fetchActiveJournal",
   async ({ userId }) => {
-    console.log("userId", userId);
     const data = await fetchJournlsData(userId);
-    console.log(data);
     if (data) {
-      return data;
+      const activeData = data.filter((item) => item.status === "active");
+      return activeData;
     }
   }
 );
 
 export const addNewJournal = createAsyncThunk(
-  "addNewJournal",
+  "journals/addNewJournal",
   async ({ newJournal }) => {
-    const data = await insertNewJournal(newJournal);
-    console.log(data);
+    await insertNewJournal(newJournal);
+    return newJournal;
   }
 );
 
 export const updateTitle = createAsyncThunk(
-  "updateTitle",
+  "journals/updateTitle",
   async ({ title, id }) => {
     try {
-      const data = await updateJournalTitle(title, id);
-      console.log(data);
+      await updateJournalTitle(title, id);
+      return { title, id };
     } catch (error) {
       console.log(error?.status);
     }
@@ -40,11 +39,12 @@ export const updateTitle = createAsyncThunk(
 );
 
 export const updateContent = createAsyncThunk(
-  "updateContent",
+  "journals/updateContent",
   async ({ content, id }) => {
     try {
-      const data = await updateJournalContent(content, id);
+      await updateJournalContent(content, id);
       console.log(data);
+      return { content, id };
     } catch (error) {
       console.log(error?.status);
     }
@@ -52,10 +52,11 @@ export const updateContent = createAsyncThunk(
 );
 
 export const deleteJournal = createAsyncThunk(
-  "deleteJournal",
+  "journals/deleteJournal",
   async ({ id }) => {
     try {
       await pushToTrash(id);
+      return { id };
     } catch (error) {
       console.log(error);
     }
@@ -71,9 +72,36 @@ const journalSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builders) => {
-    builders.addCase(fetchJournals.fulfilled, (state, action) => {
-      state.data = action.payload;
-    });
+    builders
+      .addCase(fetchActiveJournals.fulfilled, (state, action) => {
+        state.data = action.payload;
+      })
+      .addCase(addNewJournal.fulfilled, (state, action) => {
+        state.data = [action.payload, ...state.data];
+      })
+      .addCase(updateTitle.fulfilled, (state, action) => {
+        const updatedList = state.data.map((object) => {
+          if (object.id === action.payload.id) {
+            return { ...object, title: action.payload.title };
+          } else {
+            return object;
+          }
+        });
+        state.data = [...updatedList];
+      })
+      .addCase(updateContent.fulfilled, (state, action) => {
+        const updatedList = state.data.map((object) => {
+          if (object.id === action.payload.id) {
+            return { ...object, content: action.payload.content };
+          } else {
+            return object;
+          }
+        });
+        state.data = [...updatedList];
+      })
+      .addCase(deleteJournal.fulfilled, (state, action) => {
+        state.data = state.data.filter((item) => item.id !== action.payload.id);
+      });
   },
 });
 

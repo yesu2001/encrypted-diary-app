@@ -16,7 +16,6 @@ const page = async () => {
     await supabase.auth.signOut();
     return redirect("/");
   };
-  // console.log(user);
 
   return (
     <div className="animate-in flex items-center justify-center p-10 h-full">

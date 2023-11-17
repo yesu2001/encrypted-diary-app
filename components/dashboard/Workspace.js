@@ -29,7 +29,7 @@ const Workspace = ({ user }) => {
       })
     );
     handleShowMotivation();
-  }, [user, dispatch]);
+  }, [dispatch]);
 
   console.log(user);
   return (
@@ -37,10 +37,6 @@ const Workspace = ({ user }) => {
       <p className="text-center text-[2rem] text-slate-100">
         Welcome , {user?.email}
       </p>
-      {/* <div>
-        <p>💡 Tip</p>
-        <p></p>
-      </div> */}
       <div className="flex flex-col items-center justify-center space-y-4 bg-[#28292B] rounded-md">
         <div className="max-w-md p-6 rounded-md shadow-lg">
           <h1 className="text-2xl text-slate-300 font-bold mb-4">

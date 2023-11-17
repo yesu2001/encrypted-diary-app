@@ -1,11 +1,13 @@
 "use client";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 const DisplayProfile = ({ signOut }) => {
+  const user = useSelector((state) => state.user.userData);
   const [edit, setEdit] = useState(false);
-  const [name, setName] = useState("name");
-  const [email, setEmail] = useState("email");
-
+  const [name, setName] = useState(user?.name || "No name, click edit");
+  const [email, setEmail] = useState(user?.email || "No email");
+  console.log(user);
   const saveProfile = () => {
     setEdit(false);
   };
@@ -37,7 +39,13 @@ const DisplayProfile = ({ signOut }) => {
               className="outline-none border border-gray-500 bg-transparent rounded-md text-white px-2 py-1"
             />
           ) : (
-            <p className="text-gray-100">Name</p>
+            <p
+              className={`${
+                !user?.name ? "text-slate-500 " : "text-gray-200"
+              } `}
+            >
+              {name}
+            </p>
           )}
         </div>
         <div className="flex items-center">
@@ -50,7 +58,7 @@ const DisplayProfile = ({ signOut }) => {
               className="outline-none border border-gray-500 bg-transparent rounded-md text-white px-2 py-1"
             />
           ) : (
-            <p className="text-gray-100">Email@gmail.com</p>
+            <p className="text-gray-100">{email}</p>
           )}
         </div>
       </div>

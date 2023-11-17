@@ -7,7 +7,7 @@ export const fetchJournlsData = async (userId) => {
     .from("journals")
     .select()
     .eq("user_id", userId);
-  console.log("data", data);
+  // console.log("data", data);
   if (error) {
     throw new error("Unable to fetch journal data");
   }
@@ -71,4 +71,13 @@ export const deleteCompletely = async (id) => {
   if (error) {
     return error;
   }
+};
+
+export const restoreJournalWithId = async (id) => {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("journals")
+    .update({ status: "active" })
+    .eq("id", id);
+  console.log(data, error);
 };

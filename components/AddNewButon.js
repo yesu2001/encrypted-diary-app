@@ -1,6 +1,6 @@
 import React from "react";
 
-const AddNewButon = ({ handleClick, label }) => {
+const AddNewButon = ({ handleClick }) => {
   return (
     <div
       onClick={handleClick}
@@ -20,9 +20,7 @@ const AddNewButon = ({ handleClick, label }) => {
           fill="currentColor"
         />
       </svg>
-      <button className="bg-transparent text-white text-sm ">
-        New {label}
-      </button>
+      <button className="bg-transparent text-white text-sm ">New</button>
     </div>
   );
 };
