@@ -20,7 +20,7 @@ const Hero = () => {
 
       <div className="w-full md:w-1/2 mt-4 md:mt-0 md:ml-8">
         <h1 className="text-4xl text-white md:text-5xl font-semibold text-main  leading-10">
-          Your Secure Journal and Notes App
+          Your Secure Journal App
         </h1>
         <p className="text-lg text-gray-300 mt-4">
           SnapDiary is a secure and private space to write your thoughts,

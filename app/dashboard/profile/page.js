@@ -3,10 +3,12 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import DisplayProfile from "@/components/profile/DisplayProfile";
+import { checkAuthenticated } from "@/utils/serverApi";
 
 const page = async () => {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
+  await checkAuthenticated();
   const { data: user } = await supabase.auth.getUser();
   const signOut = async () => {
     "use server";

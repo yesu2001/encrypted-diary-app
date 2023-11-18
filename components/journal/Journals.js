@@ -5,11 +5,7 @@ import NewJournal from "./NewJournal";
 import SearchInput from "../SearchInput";
 import AddNewButon from "../AddNewButon";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addNewJournal,
-  fetchActiveJournals,
-  fetchJournals,
-} from "@/reducer/journalSlice";
+import { addNewJournal, fetchActiveJournals } from "@/reducer/journalSlice";
 
 const Journals = () => {
   const user = useSelector((state) => state.user.userData);

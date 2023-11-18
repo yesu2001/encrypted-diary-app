@@ -1,10 +1,11 @@
 import Workspace from "@/components/dashboard/Workspace";
+import { checkAuthenticated } from "@/utils/serverApi";
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export default async function Dashboard() {
   const supabase = createClient(cookies());
+  await checkAuthenticated();
   const { data: user } = await supabase.auth.getUser();
 
   return (

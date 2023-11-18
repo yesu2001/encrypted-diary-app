@@ -2,6 +2,7 @@ import Link from "next/link";
 import { headers, cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import { SaveUserToDB, getUserFromDB } from "@/utils/serverApi";
 
 export default function Login(searchParams) {
   const signIn = async (formData) => {
@@ -19,6 +20,9 @@ export default function Login(searchParams) {
     if (error) {
       return redirect("/auth?message=Could not authenticate user");
     }
+    const { data: user } = await supabase.auth.getUser();
+
+    const userData = await getUserFromDB(supabase, user);
 
     return redirect("/dashboard");
   };
@@ -40,8 +44,13 @@ export default function Login(searchParams) {
     });
 
     if (error) {
-      return redirect("/auth?message=Could not authenticate user");
+      return redirect(
+        "/auth?message=Could not authenticate user or user already exists"
+      );
     }
+
+    const { data: user } = await supabase.auth.getUser();
+    await SaveUserToDB(supabase, user);
 
     return redirect("/auth?message=Check email to continue sign in process");
   };
