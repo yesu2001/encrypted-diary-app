@@ -4,7 +4,6 @@ const TitleComponent = ({
   inputRef,
   isEditing,
   title,
-  text,
   handleDeletePopup,
   handleEditClick,
   handleInputBlur,
@@ -20,7 +19,7 @@ const TitleComponent = ({
         <form className="flex-[0.8]" onSubmit={handleSubmitTitle}>
           <input
             type="text"
-            value={text}
+            value={title}
             onChange={handleInputChange}
             onBlur={handleInputBlur}
             className="w-full text-2xl bg-transparent border-2 border-[#2C2D30] outline-none py-1 text-slate-200 font-bold px-2 rounded-md "

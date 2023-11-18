@@ -6,7 +6,6 @@ import { redirect } from "next/navigation";
 export default function Login(searchParams) {
   const signIn = async (formData) => {
     "use server";
-
     const email = formData.get("email");
     const password = formData.get("password");
     const cookieStore = cookies();
@@ -26,7 +25,6 @@ export default function Login(searchParams) {
 
   const signUp = async (formData) => {
     "use server";
-
     const origin = headers().get("origin");
     const email = formData.get("email");
     const password = formData.get("password");

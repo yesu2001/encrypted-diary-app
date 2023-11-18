@@ -8,7 +8,7 @@ import {
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const fetchActiveJournals = createAsyncThunk(
-  "journals/fetchActiveJournal",
+  "journals/fetchActiveJournals",
   async ({ userId }) => {
     const data = await fetchJournlsData(userId);
     if (data) {
@@ -17,6 +17,17 @@ export const fetchActiveJournals = createAsyncThunk(
     }
   }
 );
+
+// export const fetchSingleJournal = createAsyncThunk(
+//   "journals/fetchSingleJournal",
+//   async ({ id }) => {
+//     const data = await fetchJournal(id);
+//     if (data) {
+//       const activeData = data.filter((item) => item.status === "active");
+//       return activeData;
+//     }
+//   }
+// );
 
 export const addNewJournal = createAsyncThunk(
   "journals/addNewJournal",
@@ -42,8 +53,8 @@ export const updateContent = createAsyncThunk(
   "journals/updateContent",
   async ({ content, id }) => {
     try {
+      console.log(id);
       await updateJournalContent(content, id);
-      console.log(data);
       return { content, id };
     } catch (error) {
       console.log(error?.status);

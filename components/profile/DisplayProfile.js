@@ -1,4 +1,5 @@
 "use client";
+import { createClient } from "@/utils/supabase/client";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -8,7 +9,18 @@ const DisplayProfile = ({ signOut }) => {
   const [name, setName] = useState(user?.name || "No name, click edit");
   const [email, setEmail] = useState(user?.email || "No email");
   console.log(user);
+  const supabase = createClient();
+
   const saveProfile = () => {
+    const userData = {
+      name,
+      user_email: email,
+    };
+    const { data, error } = supabase
+      .from("users")
+      .update(userData)
+      .eq("uid", user.uid);
+    console.log("data", data, error);
     setEdit(false);
   };
 

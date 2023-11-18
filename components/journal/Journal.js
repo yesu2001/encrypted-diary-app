@@ -3,12 +3,10 @@ import React from "react";
 import parse from "html-react-parser";
 import DOMPurify from "dompurify";
 
-const Journal = ({ data, handleJournalClick }) => {
-  // const clean = DOMPurify.sanitize(data.content);
-  // const content = parse(clean);
+const Journal = ({ data }) => {
   return (
-    <div
-      onClick={() => handleJournalClick(data)}
+    <Link
+      href={`/dashboard/journals/${data.id}`}
       className="animate-in bg-[#28292B]  py-2 px-4 rounded-md cursor-pointer"
     >
       <div>
@@ -16,10 +14,7 @@ const Journal = ({ data, handleJournalClick }) => {
           {data?.title?.substring(0, 30) || "No title"}
         </h5>
       </div>
-      {/* <div>
-        <p className="text-slate-600">{content}</p>
-      </div> */}
-    </div>
+    </Link>
   );
 };
 

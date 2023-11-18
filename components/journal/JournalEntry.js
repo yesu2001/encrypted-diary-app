@@ -5,17 +5,22 @@ import StarterKit from "@tiptap/starter-kit";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteJournal,
+  fetchActiveJournals,
   updateContent,
   updateTitle,
 } from "@/reducer/journalSlice";
 import TitleComponent from "./TitleComponent";
 import ContentComponent from "./ContentComponent";
 import DOMPurify from "dompurify";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 
-const JournalEntry = ({ journal, setSelectedJournal }) => {
+const JournalEntry = ({ journal }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
-  const inputRef = useRef(null);
+  const titleRef = useRef(null);
+  const contentRef = useRef(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingContent, setIsEditingContent] = useState(false);
   const [title, setTitle] = useState(journal.title);
@@ -23,10 +28,26 @@ const JournalEntry = ({ journal, setSelectedJournal }) => {
   const user = useSelector((state) => state.user.userData);
 
   useEffect(() => {
+    async function fetchSingleJournal() {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("journals")
+        .select()
+        .eq("id", journal.id);
+      console.log(data[0].title);
+      setContent(data[0].content);
+      setTitle(data[0].title);
+    }
+
+    fetchSingleJournal();
+  }, [dispatch]);
+
+  useEffect(() => {
     const handleOutsideClick = (e) => {
-      if (inputRef.current && !inputRef?.current?.contains(e.target)) {
-        // handleSubmitTitle();
+      if (titleRef.current && !titleRef?.current?.contains(e.target)) {
         setIsEditing(false);
+      }
+      if (contentRef.current && !contentRef?.current?.contains(e.target)) {
         setIsEditingContent(false);
       }
     };
@@ -55,6 +76,18 @@ const JournalEntry = ({ journal, setSelectedJournal }) => {
     setIsEditingContent(false);
   };
 
+  const handleSubmitTitle = (e) => {
+    e.preventDefault();
+    dispatch(updateTitle({ title: title, id: journal.id }));
+    setIsEditing(false);
+  };
+
+  const handleDeleteJournal = () => {
+    dispatch(deleteJournal({ id: journal.id }));
+    setOpen(false);
+    router.push("/dashboard/journals");
+  };
+
   const handleEditClick = () => {
     setIsEditing(true);
   };
@@ -71,25 +104,13 @@ const JournalEntry = ({ journal, setSelectedJournal }) => {
     setOpen(true);
   };
 
-  const handleSubmitTitle = (e) => {
-    e.preventDefault();
-    dispatch(updateTitle({ title: title, id: journal.id }));
-  };
-
-  const handleDeleteJournal = () => {
-    dispatch(deleteJournal({ id: journal.id }));
-    setSelectedJournal(null);
-    setOpen(false);
-  };
-
   return (
     <div className="animate-in flex-[0.7] p-4 bg-[#1C1E21]">
       {journal ? (
         <div className="h-[100%]">
           <TitleComponent
-            title={journal?.title}
-            text={title}
-            inputRef={inputRef}
+            title={title}
+            inputRef={titleRef}
             isEditing={isEditing}
             handleInputChange={handleInputChange}
             handleInputBlur={handleInputBlur}
@@ -104,7 +125,7 @@ const JournalEntry = ({ journal, setSelectedJournal }) => {
             handleClickContent={() => setIsEditingContent(true)}
             handleSaveContent={handleSave}
             editor={editor}
-            inputRef={inputRef}
+            inputRef={contentRef}
           />
         </div>
       ) : (

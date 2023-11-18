@@ -27,9 +27,10 @@ const Workspace = ({ user }) => {
       dispatch(
         saveUser({
           user: {
-            email: user?.email,
-            uid: user?.id,
+            user_email: user?.email,
+            user_id: user?.id,
             name: user?.name || "",
+            photo: "",
           },
         })
       );
