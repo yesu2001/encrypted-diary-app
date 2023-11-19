@@ -6,31 +6,31 @@ import {
   fetchTrashJournals,
   restoreJournal,
 } from "@/reducer/trashSlice";
+import { getUser } from "@/utils/profileApi";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const Trash = () => {
-  const user = useSelector((state) => state.user.userData);
   const dispatch = useDispatch();
   const journals = useSelector((state) => state.trash.data);
-  const journalList = journals.filter(
-    (journal) => journal.status === "deactive"
-  );
+  const loading = useSelector((state) => state.trash.isLoading);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchTrashJournals({ userId: user?.uid }));
+    async function getUserFromClient() {
+      const { userId } = await getUser();
+      dispatch(fetchTrashJournals({ userId }));
+    }
+
+    getUserFromClient();
   }, [dispatch]);
 
   const handleDelete = (id) => {
-    // dispatch(delete)
     dispatch(deletePermanent(id));
-    console.log("delete", id);
     setOpen(false);
   };
 
   const handleRestore = (id) => {
-    console.log("restored", id);
     dispatch(restoreJournal(id));
   };
 
@@ -38,10 +38,14 @@ const Trash = () => {
     <div className="flex flex-col gap-5 p-5">
       <p className="text-center text-2xl text-slate-200">Trash</p>
       <div className="flex flex-col items-center justify-center my-10">
-        {journalList?.length < 1 && (
+        {loading && (
+          <p className="text-gray-500 text-2xl">Loading trash items</p>
+        )}
+
+        {journals?.length < 1 && !loading && (
           <p className="text-gray-500 text-2xl">No Trash Items</p>
         )}
-        {journalList.map((journal) => (
+        {journals?.map((journal) => (
           <TrashItem
             key={journal.id}
             item={journal}

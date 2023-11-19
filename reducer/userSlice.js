@@ -1,3 +1,4 @@
+import { fetchUserfromDB, updateUserInDB } from "@/utils/profileApi";
 import { createClient } from "@/utils/supabase/client";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
@@ -8,16 +9,35 @@ export const saveUser = createAsyncThunk("user/saveUser", async ({ user }) => {
       .from("profiles")
       .select()
       .eq("user_id", user.user_id);
-    console.log("error", error);
     if (error) {
       throw new Error("Something went wrong when fetching the user", error);
     }
-    console.log(data[0]);
     return data[0];
   } catch (error) {
     console.log(error);
   }
 });
+
+export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
+  try {
+    const data = await fetchUserfromDB();
+    return data;
+  } catch (error) {
+    console.log("Could not fetch user", error);
+  }
+});
+
+export const updateUser = createAsyncThunk(
+  "user/updateUser",
+  async ({ userData, userId }) => {
+    try {
+      const data = await updateUserInDB(userData, userId);
+      return data;
+    } catch (error) {
+      console.log("Could not update user", error);
+    }
+  }
+);
 
 const userSlice = createSlice({
   name: "user",
@@ -28,10 +48,20 @@ const userSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builders) => {
-    builders.addCase(saveUser.fulfilled, (state, action) => {
-      console.log(action.payload);
-      state.userData = action.payload;
-    });
+    builders
+      .addCase(fetchUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.userData = action.payload;
+      })
+      .addCase(saveUser.fulfilled, (state, action) => {
+        state.userData = action.payload;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.userData = action.payload;
+      });
   },
 });
 

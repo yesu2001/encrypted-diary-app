@@ -1,21 +1,13 @@
 import Journals from "@/components/journal/Journals";
+import { getUser } from "@/utils/serverApi";
 import React from "react";
 
-export default function layout({ children }) {
+export default async function layout({ children }) {
+  const { userId } = await getUser();
   return (
     <div className="flex h-full">
-      <Journals />
+      <Journals userId={userId} />
       {children}
-      {/* {selectedJournal ? (
-        <JournalEntry
-          journal={selectedJournal}
-          setSelectedJournal={setSelectedJournal}
-        />
-      ) : (
-        <p className="flex-[0.7] w-full my-auto text-center text-2xl text-gray-400">
-          Select to view journals
-        </p>
-      )} */}
     </div>
   );
 }

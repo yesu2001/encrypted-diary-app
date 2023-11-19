@@ -49,9 +49,6 @@ export default function Login(searchParams) {
       );
     }
 
-    const { data: user } = await supabase.auth.getUser();
-    await SaveUserToDB(supabase, user);
-
     return redirect("/auth?message=Check email to continue sign in process");
   };
 
@@ -113,7 +110,7 @@ export default function Login(searchParams) {
               Sign Up
             </button>
             {searchParams?.message && (
-              <p className="mt-4 p-4 bg-accent text-slate-900 text-center">
+              <p className="mt-4 p-4 bg-accent text-slate-300 text-center">
                 {searchParams.message}
               </p>
             )}

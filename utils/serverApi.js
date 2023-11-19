@@ -3,14 +3,11 @@ import { createClient } from "./supabase/server";
 import { redirect } from "next/navigation";
 
 export async function getUserFromDB(supabase, user) {
-  console.log("fetching user from DB...");
+  // console.log("fetching user from DB...");
   const { data, error } = await supabase
     .from("profiles")
     .select()
     .eq("user_id", user.user.id);
-
-  console.log("data", data);
-  console.log("error", error);
 
   if (data.length === 0) {
     const userData = await SaveUserToDB(supabase, user);
@@ -19,7 +16,7 @@ export async function getUserFromDB(supabase, user) {
       return userData;
     }
   }
-  console.log("Fetched user from DB");
+  // console.log("Fetched user from DB");
   return data[0];
 }
 
@@ -53,4 +50,14 @@ export async function checkAuthenticated() {
   if (!session.session) {
     redirect("/auth");
   }
+}
+
+export async function getUser() {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  const { data: user } = await supabase.auth.getUser();
+  return {
+    userId: user.user.id,
+    userEmail: user.user.email,
+  };
 }

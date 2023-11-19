@@ -6,13 +6,12 @@ import SearchInput from "../SearchInput";
 import AddNewButon from "../AddNewButon";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewJournal, fetchActiveJournals } from "@/reducer/journalSlice";
+import { encryptData } from "@/utils/journalsApi";
 
-const Journals = () => {
+const Journals = ({ userId }) => {
   const user = useSelector((state) => state.user.userData);
   const dispatch = useDispatch();
-  // console.log(user);
   const journals = useSelector((state) => state.journals.data);
-  const [selectedJournal, setSelectedJournal] = useState(null);
 
   const [newJournal, setNewJournal] = useState(false);
   const inputRef = useRef(null);
@@ -27,13 +26,8 @@ const Journals = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchActiveJournals({ userId: user?.uid }));
+    dispatch(fetchActiveJournals({ userId: userId }));
   }, [dispatch]);
-
-  const handleSelectJournal = (journal) => {
-    setSelectedJournal(journal);
-    console.log(journal.title, journal.content);
-  };
 
   const handleNewSubmit = (e, newTitle) => {
     e.preventDefault();
@@ -47,7 +41,6 @@ const Journals = () => {
       status: "active",
     };
 
-    console.log(newJournal);
     dispatch(addNewJournal({ newJournal }));
     setNewJournal(false);
   };
@@ -72,11 +65,7 @@ const Journals = () => {
           <NewJournal inputRef={inputRef} handleSubmit={handleNewSubmit} />
         )}
         {journals?.map((journal) => (
-          <Journal
-            key={journal?.id}
-            data={journal}
-            handleJournalClick={handleSelectJournal}
-          />
+          <Journal key={journal?.id} data={journal} />
         ))}
       </div>
     </div>

@@ -5,7 +5,7 @@ import StarterKit from "@tiptap/starter-kit";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteJournal,
-  fetchActiveJournals,
+  fetchSingleJournal,
   updateContent,
   updateTitle,
 } from "@/reducer/journalSlice";
@@ -14,6 +14,7 @@ import ContentComponent from "./ContentComponent";
 import DOMPurify from "dompurify";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
+import { decryptData, encryptData } from "@/utils/journalsApi";
 
 const JournalEntry = ({ journal }) => {
   const dispatch = useDispatch();
@@ -28,18 +29,7 @@ const JournalEntry = ({ journal }) => {
   const user = useSelector((state) => state.user.userData);
 
   useEffect(() => {
-    async function fetchSingleJournal() {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from("journals")
-        .select()
-        .eq("id", journal.id);
-      console.log(data[0].title);
-      setContent(data[0].content);
-      setTitle(data[0].title);
-    }
-
-    fetchSingleJournal();
+    dispatch(fetchSingleJournal({ id: journal.id }));
   }, [dispatch]);
 
   useEffect(() => {
@@ -71,7 +61,6 @@ const JournalEntry = ({ journal }) => {
 
   const handleSave = () => {
     const html = editor.getHTML();
-    console.log(html);
     dispatch(updateContent({ content: html, id: journal.id }));
     setIsEditingContent(false);
   };
@@ -119,7 +108,6 @@ const JournalEntry = ({ journal }) => {
             handleSubmitTitle={handleSubmitTitle}
           />
           <ContentComponent
-            text={content}
             isEditingContent={isEditingContent}
             value={content}
             handleClickContent={() => setIsEditingContent(true)}
@@ -137,7 +125,7 @@ const JournalEntry = ({ journal }) => {
         <div className="fixed inset-0 flex items-center justify-center z-10">
           <div className="text-white bg-[#17191C] p-4 rounded shadow-md">
             <p className=" text-xl font-semibold mb-4">Confirm to trash</p>
-            <p>Are you sure you want to push this journal to the trash?</p>
+            <p>Are you sure to move this to trash?</p>
             <div className="mt-4 flex justify-end">
               <button
                 onClick={() => setOpen(false)}

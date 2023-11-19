@@ -1,4 +1,21 @@
 import { createClient } from "./supabase/client";
+import CryptoJS from "crypto-js";
+
+export const encryptData = (data) => {
+  const key = process.env.NEXT_ENCRYPT_KEY;
+  const encryptedData = CryptoJS.AES.encrypt(
+    JSON.stringify(data),
+    key
+  ).toString();
+  return encryptedData;
+};
+
+export const decryptData = (encryptedData) => {
+  const key = process.env.NEXT_ENCRYPT_KEY;
+  const bytes = CryptoJS.AES.decrypt(encryptedData, key);
+  const data = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+  return data;
+};
 
 export const fetchJournlsData = async (userId) => {
   //   const supabase = createClient();
@@ -10,6 +27,15 @@ export const fetchJournlsData = async (userId) => {
   // console.log("data", data);
   if (error) {
     throw new error("Unable to fetch journal data");
+  }
+  return data;
+};
+
+export const fetchOneJournal = async (id) => {
+  const supabase = createClient();
+  const { data, error } = await supabase.from("journals").select().eq("id", id);
+  if (error) {
+    throw new error("Unable to fetch single journal ");
   }
   return data;
 };
@@ -59,10 +85,7 @@ export const updateJournalContent = async (content, id) => {
 
 export const pushToTrash = async (id) => {
   const supabase = createClient();
-  const { data, error } = await supabase
-    .from("journals")
-    .update({ status: "deactive" })
-    .eq("id", id);
+  await supabase.from("journals").update({ status: "deactive" }).eq("id", id);
 };
 
 export const deleteCompletely = async (id) => {

@@ -19,7 +19,6 @@ const Workspace = ({ user }) => {
   async function getUser() {
     const supabase = createClient();
     const { data, error } = await supabase.auth.getUser();
-    console.log("userDetails", data.user);
     if (error) {
       redirect("/auth");
     }

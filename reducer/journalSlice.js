@@ -1,5 +1,8 @@
 import {
+  decryptData,
+  encryptData,
   fetchJournlsData,
+  fetchOneJournal,
   insertNewJournal,
   pushToTrash,
   updateJournalContent,
@@ -13,26 +16,45 @@ export const fetchActiveJournals = createAsyncThunk(
     const data = await fetchJournlsData(userId);
     if (data) {
       const activeData = data.filter((item) => item.status === "active");
-      return activeData;
+      const activeJournals = activeData.map((item) => {
+        const decryptedTitle = decryptData(item.title);
+        const decryptedContent = decryptData(item.content);
+        return { ...item, title: decryptedTitle, content: decryptedContent };
+      });
+      return activeJournals;
     }
   }
 );
 
-// export const fetchSingleJournal = createAsyncThunk(
-//   "journals/fetchSingleJournal",
-//   async ({ id }) => {
-//     const data = await fetchJournal(id);
-//     if (data) {
-//       const activeData = data.filter((item) => item.status === "active");
-//       return activeData;
-//     }
-//   }
-// );
+export const fetchSingleJournal = createAsyncThunk(
+  "journals/fetchSingleJournal",
+  async ({ id }) => {
+    const data = await fetchOneJournal(id);
+    if (data) {
+      const decryptedTitle = decryptData(data[0].title);
+      const decryptedContent = decryptData(data[0].content);
+      const journal = {
+        ...data[0],
+        title: decryptedTitle,
+        content: decryptedContent,
+      };
+      console.log(journal);
+      return journal;
+    }
+  }
+);
 
 export const addNewJournal = createAsyncThunk(
   "journals/addNewJournal",
   async ({ newJournal }) => {
-    await insertNewJournal(newJournal);
+    const encryptedTitle = encryptData(newJournal.title);
+    const encryptedContent = encryptData(newJournal.content);
+    const journal = {
+      ...newJournal,
+      title: encryptedTitle,
+      content: encryptedContent,
+    };
+    await insertNewJournal(journal);
     return newJournal;
   }
 );
@@ -41,7 +63,8 @@ export const updateTitle = createAsyncThunk(
   "journals/updateTitle",
   async ({ title, id }) => {
     try {
-      await updateJournalTitle(title, id);
+      const encryptedTitle = encryptData(title);
+      await updateJournalTitle(encryptedTitle, id);
       return { title, id };
     } catch (error) {
       console.log(error?.status);
@@ -53,8 +76,8 @@ export const updateContent = createAsyncThunk(
   "journals/updateContent",
   async ({ content, id }) => {
     try {
-      console.log(id);
-      await updateJournalContent(content, id);
+      const encryptedContent = encryptData(content);
+      await updateJournalContent(encryptedContent, id);
       return { content, id };
     } catch (error) {
       console.log(error?.status);
