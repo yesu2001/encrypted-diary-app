@@ -1,6 +1,5 @@
 "use client";
 import TrashItem from "@/components/trash/TrashItem";
-import { fetchJournals } from "@/reducer/journalSlice";
 import {
   deletePermanent,
   fetchTrashJournals,

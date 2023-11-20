@@ -1,9 +1,8 @@
 "use client";
 
 import "./style.css";
-import { EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import React, { useEffect } from "react";
+import { EditorContent } from "@tiptap/react";
+import React from "react";
 
 const MenuBar = ({ editor }) => {
   if (!editor) {

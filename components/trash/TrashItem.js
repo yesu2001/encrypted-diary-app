@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 const TrashItem = ({ item, onDelete, onRestore, open, setOpen }) => {
   return (
