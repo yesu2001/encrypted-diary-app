@@ -40,7 +40,7 @@ const Workspace = ({ user }) => {
     getUser();
     handleShowMotivation();
     setLoading(false);
-  }, [dispatch]);
+  }, []);
 
   return (
     <>

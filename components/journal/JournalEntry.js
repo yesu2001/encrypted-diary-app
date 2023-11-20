@@ -44,7 +44,7 @@ const JournalEntry = ({ journal }) => {
 
   useEffect(() => {
     dispatch(fetchSingleJournal({ id: journal.id }));
-  }, [dispatch]);
+  }, [dispatch, journal]);
 
   const editor = useEditor({
     extensions: [StarterKit],

@@ -71,11 +71,11 @@ const MenuBar = ({ editor }) => {
   );
 };
 
-export default ({ editor }) => {
+export default function Tiptap({ editor }) {
   return (
     <div className="flex-1 border-2 border-gray-500 rounded-md p-4">
       <MenuBar editor={editor} />
       <EditorContent editor={editor} />
     </div>
   );
-};
+}

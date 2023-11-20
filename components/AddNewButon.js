@@ -14,8 +14,8 @@ const AddNewButon = ({ handleClick }) => {
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
+          fillRule="evenodd"
+          clipRule="evenodd"
           d="M11 3V11H3V13H11V21H13V13H21V11H13V3H11Z"
           fill="currentColor"
         />

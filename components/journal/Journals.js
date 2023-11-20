@@ -26,7 +26,7 @@ const Journals = ({ userId }) => {
 
   useEffect(() => {
     dispatch(fetchActiveJournals({ userId: userId }));
-  }, [dispatch]);
+  }, [dispatch, userId]);
 
   const handleNewSubmit = (e, newTitle) => {
     e.preventDefault();
