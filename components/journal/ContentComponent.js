@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Tiptap from "../TipTapEditor";
 import parse from "html-react-parser";
 

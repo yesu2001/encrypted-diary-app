@@ -6,7 +6,6 @@ import SearchInput from "../SearchInput";
 import AddNewButon from "../AddNewButon";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewJournal, fetchActiveJournals } from "@/reducer/journalSlice";
-import { encryptData } from "@/utils/journalsApi";
 
 const Journals = ({ userId }) => {
   const user = useSelector((state) => state.user.userData);

@@ -38,7 +38,6 @@ export const fetchSingleJournal = createAsyncThunk(
         title: decryptedTitle,
         content: decryptedContent,
       };
-      console.log(journal);
       return journal;
     }
   }

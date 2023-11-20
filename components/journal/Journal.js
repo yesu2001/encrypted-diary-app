@@ -1,7 +1,5 @@
 import Link from "next/link";
 import React from "react";
-import parse from "html-react-parser";
-import DOMPurify from "dompurify";
 
 const Journal = ({ data }) => {
   return (

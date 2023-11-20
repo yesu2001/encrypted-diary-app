@@ -11,7 +11,6 @@ const DisplayProfile = ({ signOut }) => {
 
   const [edit, setEdit] = useState(false);
   const [name, setName] = useState(user?.name || "No name, click edit");
-  const [email, setEmail] = useState(user?.user_email || "No email");
 
   useEffect(() => {
     dispatch(fetchUser());
@@ -20,7 +19,6 @@ const DisplayProfile = ({ signOut }) => {
   const saveProfile = () => {
     const userData = {
       name,
-      user_email: email,
     };
     dispatch(updateUser({ userData, userId: user.user_id }));
     setEdit(false);
@@ -70,16 +68,7 @@ const DisplayProfile = ({ signOut }) => {
             </div>
             <div className="flex items-center">
               <label className="w-[6rem] text-gray-300">Email</label>
-              {edit ? (
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="outline-none border border-gray-500 bg-transparent rounded-md text-white px-2 py-1"
-                />
-              ) : (
-                <p className="text-gray-100">{email}</p>
-              )}
+              <p className="text-gray-100">{user?.user_email}</p>
             </div>
           </div>
           {edit && (

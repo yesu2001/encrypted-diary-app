@@ -10,7 +10,6 @@ const Workspace = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.user.userData);
-  // console.log(userData);
   const [motivation, setMotivation] = useState(getRandomTipAndQuote());
   const handleShowMotivation = () => {
     setMotivation(getRandomTipAndQuote());

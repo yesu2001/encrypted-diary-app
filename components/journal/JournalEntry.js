@@ -11,10 +11,7 @@ import {
 } from "@/reducer/journalSlice";
 import TitleComponent from "./TitleComponent";
 import ContentComponent from "./ContentComponent";
-import DOMPurify from "dompurify";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
-import { decryptData, encryptData } from "@/utils/journalsApi";
 
 const JournalEntry = ({ journal }) => {
   const dispatch = useDispatch();
@@ -27,10 +24,6 @@ const JournalEntry = ({ journal }) => {
   const [title, setTitle] = useState(journal.title);
   const [content, setContent] = useState(journal.content);
   const user = useSelector((state) => state.user.userData);
-
-  useEffect(() => {
-    dispatch(fetchSingleJournal({ id: journal.id }));
-  }, [dispatch]);
 
   useEffect(() => {
     const handleOutsideClick = (e) => {
@@ -49,6 +42,10 @@ const JournalEntry = ({ journal }) => {
     };
   }, []);
 
+  useEffect(() => {
+    dispatch(fetchSingleJournal({ id: journal.id }));
+  }, [dispatch]);
+
   const editor = useEditor({
     extensions: [StarterKit],
     content,
@@ -61,8 +58,10 @@ const JournalEntry = ({ journal }) => {
 
   const handleSave = () => {
     const html = editor.getHTML();
+    const text = editor.getText();
     dispatch(updateContent({ content: html, id: journal.id }));
     setIsEditingContent(false);
+    setContent(text);
   };
 
   const handleSubmitTitle = (e) => {

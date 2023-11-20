@@ -2,9 +2,11 @@ import Link from "next/link";
 import { headers, cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { SaveUserToDB, getUserFromDB } from "@/utils/serverApi";
+import { getUserFromDB } from "@/utils/serverApi";
 
-export default function Login(searchParams) {
+export default function Login({ searchParams }) {
+  const isCheckEmail =
+    searchParams.message === "Check email to continue sign in process";
   const signIn = async (formData) => {
     "use server";
     const email = formData.get("email");
@@ -45,7 +47,7 @@ export default function Login(searchParams) {
 
     if (error) {
       return redirect(
-        "/auth?message=Could not authenticate user or user already exists"
+        "/auth?message=Could not authenticate user or User may already exists"
       );
     }
 
@@ -54,6 +56,19 @@ export default function Login(searchParams) {
 
   return (
     <div className="flex items-center justify-center bg-[#17181a]">
+      <div className="text-gray-300 mx-4 ">
+        <p className="my-4 text-lg">
+          Sign in using this credentials to explore:
+        </p>
+        <p>
+          <span className="text-slate-400 text-lg">Email:</span>{" "}
+          simpletest2023@proton.me
+        </p>
+        <p>
+          <span className="text-slate-400 text-lg">Password:</span>{" "}
+          simpletest2023@proton.me
+        </p>
+      </div>
       <div className="flex-1 flex flex-col min-h-screen px-8 sm:max-w-md justify-center gap-2">
         <Link
           href="/"
@@ -85,7 +100,7 @@ export default function Login(searchParams) {
               Email
             </label>
             <input
-              className="rounded-md px-4 py-2 bg-inherit border-2 border-slate-600 mb-6"
+              className="rounded-md px-4 py-2 bg-transparent border-2 border-slate-600 mb-6"
               name="email"
               placeholder="you@example.com"
               required
@@ -110,7 +125,13 @@ export default function Login(searchParams) {
               Sign Up
             </button>
             {searchParams?.message && (
-              <p className="mt-4 p-4 bg-accent text-slate-300 text-center">
+              <p
+                className={`mt-4 p-2 bg-accent rounded-md ${
+                  isCheckEmail ? "bg-green-100/90" : "bg-red-100/90"
+                } ${
+                  isCheckEmail ? "text-green-700" : "text-red-700"
+                } font-bold text-center`}
+              >
                 {searchParams.message}
               </p>
             )}
